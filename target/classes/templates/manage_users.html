@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h1>User Management</h1>
+    <form id="userForm">
+        <input type="hidden" id="userId">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="mobilePhone">Mobile Phone:</label>
+        <input type="text" id="mobilePhone" name="mobilePhone" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Save User</button>
+        <button onclick="userList()">user-list</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            const userId = new URLSearchParams(window.location.search).get('id');
+            if (userId) {
+                fetchUser(userId);
+            }
+
+            $('#userForm').on('submit', function (event) {
+                event.preventDefault();
+
+                const user = {
+                    id: $('#userId').val(),
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    mobilePhone: $('#mobilePhone').val(),
+                    password: $('#password').val()
+                };
+
+                if (user.id) {
+                    updateUser(user);
+                } else {
+                    createUser(user);
+                }
+            });
+        });
+
+        function fetchUser(userId) {
+            $.ajax({
+                url: `/api/users/${userId}`,
+                type: 'GET',
+                success: function (user) {
+                    $('#userId').val(user.id);
+                    $('#name').val(user.name);
+                    $('#email').val(user.email);
+                    $('#mobilePhone').val(user.mobilePhone);
+                    $('#password').val(user.password);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching user:', error);
+                }
+            });
+        }
+
+        function createUser(user) {
+            $.ajax({
+                url: '/api/users',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(user),
+                success: function () {
+                    alert('User created successfully');
+                    $('#userForm')[0].reset();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error creating user:', xhr.responseText);
+                    alert('Error creating user: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function updateUser(user) {
+            $.ajax({
+                url: `/api/users/${user.id}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(user),
+                success: function () {
+                    alert('User updated successfully');
+                    $('#userForm')[0].reset();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error updating user:', xhr.responseText);
+                    alert('Error updating user: ' + xhr.responseText);
+                }
+            });
+        }
+        function userList() {
+            window.location.href = `user-list`;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Main Page</title>
+</head>
+
+<body>
+    <h2>Main Page</h2>
+    <a href="/manage_users">Manage Users</a> |
+    <a href="/user-list">User List</a>
+
+
+    <button id="logout-button">Logout</button>
+    <div id="logout-result"></div>
+
+    <script>
+        const logoutButton = document.getElementById('logout-button');
+        const logoutResult = document.getElementById('logout-result');
+
+        logoutButton.addEventListener('click', (e) => {
+            fetch('/api/auth/logout', {
+                method: 'POST'
+            })
+                .then((response) => response.text())
+                .then((data) => {
+                    if (data === "Logout successful") {
+                        window.location.href = '/';
+                    } else {
+                        logoutResult.innerText = data;
+                    }
+                })
+                .catch((error) => {
+                    logoutResult.innerText = 'Error: ' + error;
+                });
+        });
+    </script>
+</body>
+
+</html>
