@@ -16,7 +16,7 @@ public class UsersCRUD {
     private UsersDAO us;
 
     public void saveInfo(String name, String email, String password, String mobilePhone) {
-        Users users = new Users(name, mobilePhone, password, email);
+        Users users = new Users(name, password, mobilePhone, email);
         us.save(users);
     }
 
