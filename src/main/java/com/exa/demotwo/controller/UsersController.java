@@ -2,11 +2,15 @@ package com.exa.demotwo.controller;
 
 import com.exa.demotwo.models.Users;
 import com.exa.demotwo.servic.UsersCRUD;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -28,16 +32,48 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody Users user) {
+
+    public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody Users user, BindingResult result) {
+
+        if (result.hasErrors()) {
+
+            Map<String, String> errors = new HashMap<>();
+
+            result.getFieldErrors().forEach(error ->
+
+            errors.put(error.getField(), error.getDefaultMessage()));
+
+            return ResponseEntity.badRequest().body(errors);
+
+        }
 
         usersCRUD.saveInfo(user.getName(), user.getEmail(), user.getPassword(), user.getMobilePhone());
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.status(201).build();
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody Users user) {
+
+    public ResponseEntity<Map<String, String>> updateUser(@PathVariable Long id, @Valid @RequestBody Users user,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+
+            Map<String, String> errors = new HashMap<>();
+
+            result.getFieldErrors().forEach(error ->
+
+            errors.put(error.getField(), error.getDefaultMessage()));
+
+            return ResponseEntity.badRequest().body(errors);
+
+        }
+
         usersCRUD.updateInfo(user.getName(), user.getEmail(), user.getPassword(), user.getMobilePhone(), id);
+
         return ResponseEntity.ok().build();
+
     }
 
     @DeleteMapping("/{id}")
