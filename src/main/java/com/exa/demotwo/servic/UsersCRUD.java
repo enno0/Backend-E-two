@@ -2,6 +2,7 @@ package com.exa.demotwo.servic;
 
 import com.exa.demotwo.dataaccessopject.UsersDAO;
 import com.exa.demotwo.models.Users;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,20 +37,31 @@ public class UsersCRUD {
     }
 
     public void delete(Long id) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("Invalid ID.");
+        validateId(id);
+        if (!us.existsById(id)) {
+            throw new EntityNotFoundException("User  with ID " + id + " not found.");
+
         }
         us.deleteById(id);
+
     }
 
-    public Optional<Users> getById(Long id) {
+    public Users getById(Long id) {
+        validateId(id);
+        return us.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User  with ID " + id + " not found."));
+
+    }
+
+    private void validateId(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Invalid ID.");
         }
-        return us.findById(id);
+
     }
 
     public List<Users> getAll() {
+
         return us.findAll();
     }
 
