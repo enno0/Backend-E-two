@@ -10,17 +10,39 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The UsersCRUD class provides CRUD operations for the Users entity.
+ * It interacts with the UsersDAO to perform database operations.
+ */
 @Service
 @Transactional
 public class UsersCRUD {
     @Autowired
     private UsersDAO us;
 
+    /**
+     * Saves a new user with the provided information.
+     *
+     * @param name        the name of the user
+     * @param email       the email address of the user
+     * @param password    the password of the user
+     * @param mobilePhone the mobile phone number of the user
+     */
     public void saveInfo(String name, String email, String password, String mobilePhone) {
         Users users = new Users(name, password, mobilePhone, email);
         us.save(users);
     }
 
+    /**
+     * Updates an existing user's information.
+     *
+     * @param name        the new name of the user
+     * @param email       the new email address of the user
+     * @param password    the new password of the user
+     * @param mobilePhone the new mobile phone number of the user
+     * @param id          the ID of the user to be updated
+     * @throws IllegalArgumentException if the user with the given ID does not exist
+     */
     public void updateInfo(String name, String email, String password, String mobilePhone, Long id) {
         Optional<Users> existingRecord = us.findById(id);
         if (existingRecord.isPresent()) {
@@ -36,6 +58,12 @@ public class UsersCRUD {
 
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param id the ID of the user to be deleted
+     * @throws EntityNotFoundException if the user with the given ID does not exist
+     */
     public void delete(Long id) {
         validateId(id);
         if (!us.existsById(id)) {
@@ -46,6 +74,13 @@ public class UsersCRUD {
 
     }
 
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id the ID of the user to be retrieved
+     * @return the user with the specified ID
+     * @throws EntityNotFoundException if the user with the given ID does not exist
+     */
     public Users getById(Long id) {
         validateId(id);
         return us.findById(id)
@@ -53,15 +88,25 @@ public class UsersCRUD {
 
     }
 
+    /**
+     * Validates the provided ID.
+     *
+     * @param id the ID to be validated
+     * @throws IllegalArgumentException if the ID is null or less than or equal to zero
+     */
     private void validateId(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Invalid ID.");
         }
 
     }
-
+    
+    /**
+     * Retrieves a list of all users.
+     *
+     * @return a list of all users
+     */
     public List<Users> getAll() {
-
         return us.findAll();
     }
 

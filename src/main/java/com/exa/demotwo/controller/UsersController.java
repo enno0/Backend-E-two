@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The UsersController class is a REST controller that handles user-related operations.
+ * It provides endpoints for creating, retrieving, updating, and deleting users.
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
@@ -21,11 +25,24 @@ public class UsersController {
     @Autowired
     private UsersCRUD usersCRUD;
 
+    /**
+     * Retrieves a list of all users.
+     *
+     * @return a ResponseEntity containing a list of Users and an HTTP status of 200 OK
+     */
     @GetMapping
     public ResponseEntity<List<Users>> getAllUsers() {
         return ResponseEntity.ok(usersCRUD.getAll());
     }
 
+    /**
+     * Creates a new user.
+     *
+     * @param user   the user to be created
+     * @param result the binding result containing validation errors, if any
+     * @return a ResponseEntity containing a map of validation errors if there are any,
+     * or an HTTP status of 201 Created if the user is successfully created
+     */
     @PostMapping
     public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody Users user, BindingResult result) {
 
@@ -40,6 +57,15 @@ public class UsersController {
 
     }
 
+    /**
+     * Updates an existing user.
+     *
+     * @param id     the ID of the user to be updated
+     * @param user   the updated user information
+     * @param result the binding result containing validation errors, if any
+     * @return a ResponseEntity containing a map of validation errors if there are any,
+     * or an HTTP status of 200 OK if the user is successfully updated
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateUser(@PathVariable Long id, @Valid @RequestBody Users user,
                                                           BindingResult result) {
@@ -57,6 +83,12 @@ public class UsersController {
 
     }
 
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id the ID of the user to be retrieved
+     * @return a ResponseEntity containing the user if found, or an appropriate HTTP status
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
@@ -71,7 +103,13 @@ public class UsersController {
                     .body("An unexpected error occurred: " + e.getMessage());
         }
     }
-
+    
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param id the ID of the user to be deleted
+     * @return a ResponseEntity containing a success message or an appropriate HTTP status
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItem(@PathVariable Long id) {
         try {
