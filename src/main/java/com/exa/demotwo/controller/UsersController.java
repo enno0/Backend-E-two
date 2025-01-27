@@ -48,8 +48,7 @@ public class UsersController {
 
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
-            result.getFieldErrors().forEach(error ->
-                    errors.put(error.getField(), error.getDefaultMessage()));
+            result.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(errors);
         }
         usersCRUD.saveInfo(user.getName(), user.getEmail(), user.getPassword(), user.getMobilePhone());
@@ -67,13 +66,11 @@ public class UsersController {
      * or an HTTP status of 200 OK if the user is successfully updated
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateUser(@PathVariable Long id, @Valid @RequestBody Users user,
-                                                          BindingResult result) {
+    public ResponseEntity<Map<String, String>> updateUser(@PathVariable Long id, @Valid @RequestBody Users user, BindingResult result) {
 
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
-            result.getFieldErrors().forEach(error ->
-                    errors.put(error.getField(), error.getDefaultMessage()));
+            result.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(errors);
 
         }
@@ -99,11 +96,10 @@ public class UsersController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
-    
+
     /**
      * Deletes a user by their ID.
      *

@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         return ResponseEntity.badRequest().body("Invalid input: Please provide a numeric ID.");
     }
-    
+
     /**
      * Handles exceptions that occur when there is a type mismatch in method arguments.
      *
