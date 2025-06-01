@@ -1,8 +1,10 @@
 package com.exa.demotwo.dataaccessopject;
 
-import com.exa.demotwo.models.User;
+import com.exa.demotwo.models.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<Users, Long> {
+    Optional<Users> findByEmail(String email);
 }
