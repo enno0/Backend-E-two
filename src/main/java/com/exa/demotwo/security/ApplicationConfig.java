@@ -1,6 +1,6 @@
 package com.exa.demotwo.security;
 
-import com.exa.demotwo.dataaccessopject.UserRepository;
+import com.exa.demotwo.dataaccessopject.UsersDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository repository;
+    private final UsersDAO repository;
 
     @Bean
     public UserDetailsService userDetailsService() {

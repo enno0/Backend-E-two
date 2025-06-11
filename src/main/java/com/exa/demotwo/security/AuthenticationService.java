@@ -1,6 +1,6 @@
 package com.exa.demotwo.security;
 
-import com.exa.demotwo.dataaccessopject.UserRepository;
+import com.exa.demotwo.dataaccessopject.UsersDAO;
 import com.exa.demotwo.models.Role;
 import com.exa.demotwo.models.Users;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository repository;
+    private final UsersDAO repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
