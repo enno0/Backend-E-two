@@ -1,113 +1,66 @@
 package com.exa.demotwo.servic;
 
 import com.exa.demotwo.daos.UsersDAO;
+import com.exa.demotwo.dtos.CreateUserRequestDTO;
+import com.exa.demotwo.dtos.UpdateUserRequest;
+import com.exa.demotwo.dtos.UserResponseDTO;
+import com.exa.demotwo.mappers.UserMapper;
+import com.exa.demotwo.models.Role;
 import com.exa.demotwo.models.Users;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * The UsersCRUD class provides CRUD operations for the Users entity.
- * It interacts with the UsersDAO to perform database operations.
- */
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class UsersCRUD {
-    @Autowired
-    private UsersDAO us;
+    private final UsersDAO usersDAO;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    /**
-     * Saves a new user with the provided information.
-     *
-     * @param name        the name of the user
-     * @param email       the email address of the user
-     * @param password    the password of the user
-     * @param mobilePhone the mobile phone number of the user
-     */
-    public void saveInfo(String name, String email, String password, String mobilePhone) {
-        Users users = new Users(name, password, mobilePhone, email);
-        us.save(users);
+    public UserResponseDTO createUser(CreateUserRequestDTO request) {
+        Users user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.USER); // Default role
+        Users savedUser = usersDAO.save(user);
+        return userMapper.toUserResponse(savedUser);
     }
 
-    /**
-     * Updates an existing user's information.
-     *
-     * @param name        the new name of the user
-     * @param email       the new email address of the user
-     * @param password    the new password of the user
-     * @param mobilePhone the new mobile phone number of the user
-     * @param id          the ID of the user to be updated
-     * @throws IllegalArgumentException if the user with the given ID does not exist
-     */
-    public void updateInfo(String name, String email, String password, String mobilePhone, Long id) {
-        Optional<Users> existingRecord = us.findById(id);
-        if (existingRecord.isPresent()) {
-            Users users = existingRecord.get();
-            users.setName(name);
-            users.setEmail(email);
-            users.setPassword(password);
-            users.setMobilePhone(mobilePhone);
-            us.save(users);
-        } else {
-            throw new IllegalArgumentException("Invalid input data or record not found.");
+    public UserResponseDTO updateUser(UpdateUserRequest request, Long id) {
+        Users user = usersDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        userMapper.updateUserFromDto(request, user);
+        if (request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
+        Users updatedUser = usersDAO.save(user);
+        return userMapper.toUserResponse(updatedUser);
     }
 
-    /**
-     * Deletes a user by their ID.
-     *
-     * @param id the ID of the user to be deleted
-     * @throws EntityNotFoundException if the user with the given ID does not exist
-     */
-    public void delete(Long id) {
-        validateId(id);
-        if (!us.existsById(id)) {
-            throw new EntityNotFoundException("User  with ID " + id + " not found.");
-
+    public void deleteUser(Long id) {
+        if (!usersDAO.existsById(id)) {
+            throw new EntityNotFoundException("User not found");
         }
-        us.deleteById(id);
-
+        usersDAO.deleteById(id);
     }
 
-    /**
-     * Retrieves a user by their ID.
-     *
-     * @param id the ID of the user to be retrieved
-     * @return the user with the specified ID
-     * @throws EntityNotFoundException if the user with the given ID does not exist
-     */
-    public Users getById(Long id) {
-        validateId(id);
-        return us.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User  with ID " + id + " not found."));
-
+    public UserResponseDTO getUserById(Long id) {
+        Users user = usersDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return userMapper.toUserResponse(user);
     }
 
-    /**
-     * Validates the provided ID.
-     *
-     * @param id the ID to be validated
-     * @throws IllegalArgumentException if the ID is null or less than or equal to zero
-     */
-    private void validateId(Long id) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("Invalid ID.");
-        }
-
+    public List<UserResponseDTO> getAllUsers() {
+        return usersDAO.findAll().stream()
+                .map(userMapper::toUserResponse)
+                .collect(Collectors.toList());
     }
-
-    /**
-     * Retrieves a list of all users.
-     *
-     * @return a list of all users
-     */
-    public List<Users> getAll() {
-        return us.findAll();
-    }
-
 }
