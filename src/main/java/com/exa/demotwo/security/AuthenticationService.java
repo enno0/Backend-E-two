@@ -1,6 +1,9 @@
 package com.exa.demotwo.security;
 
-import com.exa.demotwo.dataaccessopject.UsersDAO;
+import com.exa.demotwo.daos.UsersDAO;
+import com.exa.demotwo.dtos.AuthenticationRequest;
+import com.exa.demotwo.dtos.AuthenticationResponse;
+import com.exa.demotwo.dtos.RegisterRequest;
 import com.exa.demotwo.models.Role;
 import com.exa.demotwo.models.Users;
 import lombok.RequiredArgsConstructor;

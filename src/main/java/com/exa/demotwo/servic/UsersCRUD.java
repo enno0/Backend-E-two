@@ -1,6 +1,6 @@
 package com.exa.demotwo.servic;
 
-import com.exa.demotwo.dataaccessopject.UsersDAO;
+import com.exa.demotwo.daos.UsersDAO;
 import com.exa.demotwo.models.Users;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

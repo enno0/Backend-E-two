@@ -1,9 +1,9 @@
 package com.exa.demotwo.controller;
 
-import com.exa.demotwo.security.AuthenticationRequest;
-import com.exa.demotwo.security.AuthenticationResponse;
+import com.exa.demotwo.dtos.AuthenticationRequest;
+import com.exa.demotwo.dtos.AuthenticationResponse;
+import com.exa.demotwo.dtos.RegisterRequest;
 import com.exa.demotwo.security.AuthenticationService;
-import com.exa.demotwo.security.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

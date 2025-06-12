@@ -1,4 +1,4 @@
-package com.exa.demotwo.security;
+package com.exa.demotwo.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.exa.demotwo.dataaccessopject;
+package com.exa.demotwo.daos;
 
 import com.exa.demotwo.models.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
